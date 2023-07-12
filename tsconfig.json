@@ -1,0 +1,28 @@
+{
+  "compileOnSave": true,
+  "compilerOptions": {
+    "experimentalDecorators": true,
+    "emitDecoratorMetadata": true,
+    "skipLibCheck": true,
+    "esModuleInterop": true,
+    "forceConsistentCasingInFileNames": true,
+    "target": "es2016",
+    "module": "commonjs",
+    "declaration": true,
+    "declarationMap": true,
+    "outDir": "./dist/",        
+    "rootDir": "./src/",
+    "baseUrl": "./src/",
+    "paths": {
+      "@/*": [
+        "*"
+      ]
+    },
+    "composite": true,
+    "strict": true,
+    "moduleResolution": "node",
+  },
+  "ts-node": {
+    "require": ["tsconfig-paths/register"]
+  }
+}
