@@ -1,0 +1,32 @@
+html(lang="en")
+  include includes/head.pug
+  body.bg-slate-50
+    .container.mx-auto.px-4.h-screen.relative
+      div
+        .absolute.transform(class='top-1/2 left-1/2 -translate-y-1/2 -translate-x-1/2 z-[-1]' style='boxShadow: 10px -6px 400px')
+      .flex.content-center.items-center.justify-center.h-full
+        .w-full.px-4.relative(class='lg:w-4/12')
+          if error
+            .text-red-500.absolute.-top-10
+              | #{error}
+          .relative.flex.flex-col.min-w-0.break-words.w-full.mb-6.shadow-lg.rounded-lg.bg-slate-200.border-0
+            .flex-auto.px-4.py-10.pt-0.bg-white(class='lg:px-10')
+              .text-slate-400.text-xl.text-center.mb-3.font-bold.mt-8
+                small Selamat Datang
+              form(method='POST' action='/auth/login')
+                .relative.w-full.mb-3
+                  label.block.uppercase.text-slate-600.text-xs.font-bold.mb-2(htmlfor='grid-password')
+                    | Nama
+                  input.input.w-full.rounded-md(type='text' placeholder='Nama' required='' name='name')
+                .relative.w-full.mb-3
+                  label.block.uppercase.text-slate-600.text-xs.font-bold.mb-2(htmlfor='grid-password')
+                    | Password
+                  input.input.w-full.rounded-md(type='password' placeholder='Password' required='' name='password')
+                .relative.-left-2
+                .text-center.mt-6
+                  button.bg-slate-800.text-white.text-sm.font-bold.uppercase.px-6.py-3.rounded.shadow.outline-none.mr-1.mb-1.w-full.ease-linear.transition-all.duration-150(class='active:bg-slate-600 hover:shadow-lg focus:outline-none' type='submit')
+                    | Masuk
+          .flex.flex-wrap.mt-6.relative
+            .text-left(class='w-1/2')
+              a.text-slate-700(href='#')
+                small Back to home

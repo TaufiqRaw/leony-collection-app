@@ -1,4 +1,4 @@
-import { Class } from "../types/class.type"
+import { Class } from "../../types/class.type"
 
 export class InstanceMap {
   private entries : any[] = []

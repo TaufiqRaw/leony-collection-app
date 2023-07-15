@@ -1,9 +1,9 @@
-import Express ,{ Application } from "express"
+import Express ,{ Application, Request, Response } from "express"
 import path from "path"
 import httpContext from "express-http-context"
 import { MikroORM, PostgreSqlDriver } from "@mikro-orm/postgresql"
 import { Options } from "@mikro-orm/core"
-import { InstanceMap } from "@/utils/instance-map.util"
+import { InstanceMap } from "@/utils/classes/instance-map.util"
 
 //TODO: fix values and make it more detailed
 interface ExpressSetting {
@@ -29,7 +29,8 @@ interface ServerConfig {
   plugins?: any[]
   databaseConfig: Options<PostgreSqlDriver>,
   config? : ExpressSetting,
-  routes? : any[]
+  routes? : any[],
+  onReq? : (req : Request, res : Response) => void
 }
 
 export class Server {
@@ -39,16 +40,18 @@ export class Server {
   private config : ExpressSetting
   private orm : MikroORM = {} as MikroORM
   private routes : any[]
+  private onReq : (req : Request, res : Response) => void
 
   private _plugins : any[]
 
-  constructor({port, plugins, databaseConfig, config, routes}:ServerConfig) {
+  constructor({port, plugins, databaseConfig, config, routes, onReq}:ServerConfig) {
     this.port = port
     this.application = Express()
     this._plugins = plugins || []
     this.databaseConfig = databaseConfig
     this.config = config || {}
     this.routes = routes || []
+    this.onReq = onReq || ((req, res) => {})
   }
   
   public async run() {
@@ -65,10 +68,11 @@ export class Server {
         httpContext.set('controller-map', new InstanceMap())
         httpContext.set("service-map", new InstanceMap())
         res.locals.env = process.env
+        this.onReq(req, res)
         next()
       })
 
-      this.routes.forEach(controller => this.application.use(controller))
+      this.routes.forEach(controller => this.application.use(controller.path,controller.router))
 
       this.application.listen(this.port, () => {
         console.log(`Server running on port ${this.port}`)

@@ -7,4 +7,8 @@ export class UserService {
   public async getUser(id: number) {
     return await this.userRepository.findOne(id)
   }
+
+  public async getUserByName(name: string) {
+    return await this.userRepository.findOne({ name })
+  }
 }

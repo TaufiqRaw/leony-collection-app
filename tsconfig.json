@@ -1,6 +1,7 @@
 {
   "compileOnSave": true,
   "compilerOptions": {
+    "strictPropertyInitialization": false,
     "experimentalDecorators": true,
     "emitDecoratorMetadata": true,
     "skipLibCheck": true,
@@ -21,6 +22,10 @@
     "composite": true,
     "strict": true,
     "moduleResolution": "node",
+    "typeRoots": [
+      "./node_modules/@types/",
+      "./src/types/"
+    ],  
   },
   "ts-node": {
     "require": ["tsconfig-paths/register"]

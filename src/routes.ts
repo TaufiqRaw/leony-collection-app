@@ -1,12 +1,9 @@
 import { Router } from "express";
-import staticRoute from "./modules/static/static.route";
-import userRoutes from "./modules/user/user.route";
+import staticRoute from "./modules/dashboard/dashboard.route";
+import authNRoute from "./modules/auth-n/auth-n.route";
+import userRoute from "./modules/user/user.route";
 
-const routes = Router()
-
-const route=[ 
-  userRoutes,
-  staticRoute
-].forEach(route => routes.use(route.path, route.router))
-
-export default routes;
+export const routes=[ 
+  authNRoute,
+  staticRoute, 
+]

@@ -1,5 +1,5 @@
 import httpContext from "express-http-context"
-import { InstanceMap } from "./instance-map.util";
+import { InstanceMap } from "./classes/instance-map.util";
 import { Class } from "../types/class.type";
 
 export function getService<T>(service: new () => T): T{

@@ -1,6 +1,6 @@
 import { Entity, Index, Property, Unique } from "@mikro-orm/core";
 import { EntityWithoutBase } from "../../types/entity-without-base.type";
-import { CustomBaseEntity } from "../../utils/custom-base.entity";
+import { CustomBaseEntity } from "../../utils/classes/custom-base.entity";
 
 interface UserProps extends EntityWithoutBase<User>{}
 
