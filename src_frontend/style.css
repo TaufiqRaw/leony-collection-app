@@ -1,0 +1,64 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+.input{
+  @apply border border-gray-400 p-2 pr-9 focus:outline-none focus:ring ease-linear transition-all;
+}
+
+.btn {
+  @apply text-base font-semibold px-4 py-2 shadow outline-none focus:outline-none rounded-md
+  ease-linear hover:shadow-lg  transition-all duration-150;
+}
+
+.btn-primary {
+  @apply bg-primary-light active:bg-primary-dark text-white;
+}
+
+.card{
+  @apply rounded bg-white border border-gray-300
+}
+
+.card-header{
+  @apply border-b p-6
+}
+
+.card-body{
+  @apply p-6
+}
+.card-footer{
+  @apply border-t p-6
+}
+
+body,h1,h2,h3,h4,h5,h6,p,a{
+  @apply capitalize
+}
+
+p{
+  @apply tracking-wider text-sm text-gray-500
+}
+
+
+.h1{
+  @apply text-6xl font-black
+}
+
+.h2{
+  @apply text-5xl font-extrabold
+}
+
+.h3{
+  @apply text-4xl font-extrabold
+}
+
+.h4{
+  @apply text-3xl font-extrabold
+}
+
+.h5{
+  @apply text-2xl font-extrabold
+}
+
+.h6{
+  @apply text-xl font-extrabold
+}

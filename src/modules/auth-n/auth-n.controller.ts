@@ -20,7 +20,7 @@ export class AuthNController{
     })
 
     if(!user)
-      return
+      return res.redirect('/auth/login')
 
     const userEntity = await this.userService.getUserByName(user.name)
     if(!userEntity){

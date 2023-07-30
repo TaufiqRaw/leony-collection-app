@@ -1,12 +1,12 @@
 import { Route } from "@/utils/classes/route.util";
 import { mustLoginMiddleware } from "../auth-n/middlewares/must-login.middleware";
 
-const staticRoute = new Route("/dashboard");
+const route = new Route("/dashboard");
 
-staticRoute.use(mustLoginMiddleware);
+route.use(mustLoginMiddleware);
 
-staticRoute.get("/", (req, res) => {
+route.get("/", (req, res) => {
   res.render("user/dashboard")
 });
 
-export default staticRoute.build();
+export default route.build();

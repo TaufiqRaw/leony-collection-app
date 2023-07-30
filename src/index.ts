@@ -16,15 +16,15 @@ new Server({
   port: process.env.PORT || 3000,
   plugins: [
     cookieParser(),
-    cors({
-      origin: true,
-      methods: ['GET', 'POST', 'PUT', 'DELETE'],
-      allowedHeaders: ['Content-Type', 'Authorization', 'Accept', 'Origin', 'X-Requested-With', 'X-Access-Token', 'X-Key', 'Cookies', 'Cache-Control', 'Set-Cookie'],
-      credentials: true
-    }),
-    helmet({
-      crossOriginResourcePolicy: false,
-    }),
+    // cors({
+    //   origin: true,
+    //   methods: ['GET', 'POST', 'PUT', 'DELETE'],
+    //   allowedHeaders: ['Content-Type', 'Authorization', 'Accept', 'Origin', 'X-Requested-With', 'X-Access-Token', 'X-Key', 'Cookies', 'Cache-Control', 'Set-Cookie'],
+    //   credentials: true
+    // }),
+    // helmet({
+    //   crossOriginResourcePolicy: false,
+    // }),
     Express.urlencoded({extended: true}),
     Express.static(path.join(__dirname, "../public")),
     session({
@@ -41,7 +41,7 @@ new Server({
   ],
   config : {
     "view engine" : "pug",
-    "views" : path.join(__dirname, "../views"),
+    "views" : path.join(__dirname, "../src_frontend/pug"),
   },
   onReq : (req, res) => {
     res.locals.error = req.flash("error")

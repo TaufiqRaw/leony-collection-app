@@ -1,8 +1,20 @@
 /** @type {import('tailwindcss').Config} */
 module.exports = {
-  content: ["./views/**/*.{pug,js}"],
+  content: ["./src_frontend/**/*.{pug,ts}"],
   theme: {
-    extend: {},
+    extend: {
+      colors: {
+        primary: {
+          DEFAULT: "#FF6363",
+          dark: "#FF6363",
+          light: "#FF6363",
+        },
+        secondary: {
+          DEFAULT: "#C5ECFD",
+          dark: "#C5ECFD",
+        },
+      },
+    },
   },
   plugins: [],
 }

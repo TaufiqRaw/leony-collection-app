@@ -1,0 +1,77 @@
+extends layout.pug
+
+block content
+  .flex.gap-3.flex-col(class="lg:flex-row")
+    .flex.flex-col(class="lg:grow")
+      .card.h-min
+        // header
+        .card-header.flex.flex-row.justify-between
+          h1.h6 Rangkuman Bulan Ini
+        // end header
+        // body
+        .p-5.flex.flex-col.items-center.gap-3
+          canvas#myChart
+        // end body
+      .grid.grid-cols-1.gap-6(class='lg:grid-cols-3')
+        // card
+        .card.mt-6
+          .card-body.flex.items-center
+            .px-3.py-2.rounded.bg-indigo-600.text-white.mr-3
+              i.fad.fa-wallet
+            .flex.flex-col
+              h1.font-semibold
+                span.num-2
+                |  Sales
+              p.text-xs
+                span.num-2
+                |  payments
+        // end card
+        // card
+        .card.mt-6
+          .card-body.flex.items-center
+            .px-3.py-2.rounded.bg-indigo-600.text-white.mr-3
+              i.fad.fa-wallet
+            .flex.flex-col
+              h1.font-semibold
+                span.num-2
+                |  Sales
+              p.text-xs
+                span.num-2
+                |  payments
+        // end card
+    .flex.gap-3.flex-col
+      .card.h-min
+        // header
+        .card-header.flex.flex-row.justify-between
+          h1.h6 Riwayat Hasil Kerja
+        // end header
+        // body
+        .p-5.flex.flex-col.items-center.gap-3
+          #calendar.container.mx-auto.p-2
+          hr.w-full.my-2
+          .flex.flex-col.gap-2.px-2.w-full
+            .h-20(data-simplebar data-simplebar-auto-hide="false")
+              div #[span.font-medium 03/07/2021] - #[span.text-gray-500 3 Piece Diselesaikan]
+              div #[span.font-medium 03/07/2021] - #[span.text-gray-500 3 Piece Diselesaikan]
+              div #[span.font-medium 03/07/2021] - #[span.text-gray-500 3 Piece Diselesaikan]
+              div #[span.font-medium 03/07/2021] - #[span.text-gray-500 3 Piece Diselesaikan]
+              div #[span.font-medium 03/07/2021] - #[span.text-gray-500 3 Piece Diselesaikan]
+              div #[span.font-medium 03/07/2021] - #[span.text-gray-500 3 Piece Diselesaikan]
+        // end body
+      .card.h-min
+        // header
+        .card-header.flex.flex-row.justify-between
+          h1.h6 Laporkan Hasil
+        // end header
+        // body
+        .p-5.flex.flex-col.items-center.gap-3
+          .flex.items-center.gap-2.text-2xl
+            i(class="fa fas fa-shirt")
+            input#jobResult.input.text-lg(type="number" name="jobResult" min="0" max="100" value="0")
+          button.btn.btn-primary(type='submit') Tambah ke hasil hari ini
+        // end body
+
+block script
+  script(src="scripts/user.dashboard.js")
+
+    

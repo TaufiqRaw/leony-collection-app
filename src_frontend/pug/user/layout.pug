@@ -1,0 +1,189 @@
+html(lang="en")
+  include ../includes/head.pug
+  body.min-h-screen.flex.flex-col
+    nav#header.bg-white.fixed.w-full.z-10.top-0.shadow
+      .w-full.container.mx-auto.flex.flex-wrap.items-center.mt-0.pt-3.pb-3(class='md:pb-0')
+        .pl-2(class='w-1/2 md:pl-0')
+          a.text-gray-900.text-base.no-underline.font-bold(class='xl:text-xl hover:no-underline' href='#')
+            i.fas.fa-sun.text-pink-600.pr-3
+            | #{env.APP_NAME}
+        .pr-0(class='w-1/2')
+          .flex.relative.inline-block.float-right
+            .relative.text-sm
+              button#userButton.flex.items-center.mr-3(class='focus:outline-none')
+                img.w-8.h-8.rounded-full.mr-4(src='http://i.pravatar.cc/300' alt='Avatar of User')
+                span.hidden(class='md:inline-block') Hi, #{user.name} 
+                svg.pl-2.h-2(version='1.1' xmlns='http://www.w3.org/2000/svg' viewbox='0 0 129 129' xmlns:xlink='http://www.w3.org/1999/xlink' enable-background='new 0 0 129 129')
+                  g
+                    path(d='m121.3,34.6c-1.6-1.6-4.2-1.6-5.8,0l-51,51.1-51.1-51.1c-1.6-1.6-4.2-1.6-5.8,0-1.6,1.6-1.6,4.2 0,5.8l53.9,53.9c0.8,0.8 1.8,1.2 2.9,1.2 1,0 2.1-0.4 2.9-1.2l53.9-53.9c1.7-1.6 1.7-4.2 0.1-5.8z')
+              #userMenu.bg-white.rounded.shadow-md.mt-2.absolute.mt-12.top-0.right-0.min-w-full.overflow-auto.z-30.invisible
+                ul.list-reset
+                  li
+                    a.px-4.py-2.block.text-gray-900.no-underline(href='#' class='hover:bg-gray-400 hover:no-underline') My account
+                  li
+                    a.px-4.py-2.block.text-gray-900.no-underline(href='#' class='hover:bg-gray-400 hover:no-underline') Notifications
+                  li
+                    hr.border-t.mx-2.border-gray-400
+                  li
+                    a.px-4.py-2.block.text-gray-900.no-underline(href='#' class='hover:bg-gray-400 hover:no-underline') Logout
+            .block.pr-4(class='lg:hidden')
+              button#nav-toggle.flex.items-center.px-3.py-2.border.rounded.text-gray-500.border-gray-600.appearance-none(class='hover:text-gray-900 hover:border-teal-500 focus:outline-none')
+                svg.fill-current.h-3.w-3(viewbox='0 0 20 20' xmlns='http://www.w3.org/2000/svg')
+                  title Menu
+                  path(d='M0 3h20v2H0V3zm0 6h20v2H0V9zm0 6h20v2H0v-2z')
+        #nav-content.w-full.flex-grow.hidden.mt-2.bg-white.z-20(class='lg:flex lg:items-center lg:w-auto lg:block lg:mt-0')
+          ul.list-reset.flex-1.items-center.px-4(class='lg:flex md:px-0')
+            li.mr-6.my-2(class='md:my-0')
+              a.block.py-1.pl-1.align-middle.text-pink-600.no-underline.border-b-2.border-orange-600(href='#' class='md:py-3 hover:text-gray-900 hover:border-orange-600')
+                i.fas.fa-home.fa-fw.mr-3.text-pink-600
+                span.pb-1.text-sm(class='md:pb-0') Home
+            //- li.mr-6.my-2(class='md:my-0')
+            //-   a.block.py-1.pl-1.align-middle.text-gray-500.no-underline.border-b-2.border-white(href='#' class='md:py-3 hover:text-gray-900 hover:border-pink-500')
+            //-     i.fas.fa-tasks.fa-fw.mr-3
+            //-     span.pb-1.text-sm(class='md:pb-0') Tasks
+            //- li.mr-6.my-2(class='md:my-0')
+            //-   a.block.py-1.pl-1.align-middle.text-gray-500.no-underline.border-b-2.border-white(href='#' class='md:py-3 hover:text-gray-900 hover:border-purple-500')
+            //-     i.fa.fa-envelope.fa-fw.mr-3
+            //-     span.pb-1.text-sm(class='md:pb-0') Messages
+            //- li.mr-6.my-2(class='md:my-0')
+            //-   a.block.py-1.pl-1.align-middle.text-gray-500.no-underline.border-b-2.border-white(href='#' class='md:py-3 hover:text-gray-900 hover:border-green-500')
+            //-     i.fas.fa-chart-area.fa-fw.mr-3
+            //-     span.pb-1.text-sm(class='md:pb-0') Analytics
+            //- li.mr-6.my-2(class='md:my-0')
+            //-   a.block.py-1.pl-1.align-middle.text-gray-500.no-underline.border-b-2.border-white(href='#' class='md:py-3 hover:text-gray-900 hover:border-red-500')
+            //-     i.fa.fa-wallet.fa-fw.mr-3
+            //-     span.pb-1.text-sm(class='md:pb-0') Payments
+    // Container
+    .bg-gray-100.grow
+      .container.w-full.mx-auto.pt-20
+        .w-full.px-4.mb-16.text-gray-800.leading-normal(class='md:px-0 md:mt-8')
+          // Console Content
+          //- .flex.flex-wrap
+          //-   .w-full.p-3(class='md:w-1/2 xl:w-1/3')
+          //-     // Metric Card
+          //-     .bg-white.border.rounded.shadow.p-2
+          //-       .flex.flex-row.items-center
+          //-         .flex-shrink.pr-4
+          //-           .rounded.p-3.bg-green-600
+          //-             i.fa.fa-wallet.fa-2x.fa-fw.fa-inverse
+          //-         .flex-1.text-right(class='md:text-center')
+          //-           h5.font-bold.uppercase.text-gray-500 Total Revenue
+          //-           h3.font-bold.text-3xl
+          //-             | $3249 
+          //-             span.text-green-500
+          //-               i.fas.fa-caret-up
+          //-     // /Metric Card
+          //-   .w-full.p-3(class='md:w-1/2 xl:w-1/3')
+          //-     // Metric Card
+          //-     .bg-white.border.rounded.shadow.p-2
+          //-       .flex.flex-row.items-center
+          //-         .flex-shrink.pr-4
+          //-           .rounded.p-3.bg-pink-600
+          //-             i.fas.fa-users.fa-2x.fa-fw.fa-inverse
+          //-         .flex-1.text-right(class='md:text-center')
+          //-           h5.font-bold.uppercase.text-gray-500 Total Users
+          //-           h3.font-bold.text-3xl
+          //-             | 249 
+          //-             span.text-pink-500
+          //-               i.fas.fa-exchange-alt
+          //-     // /Metric Card
+          //-   .w-full.p-3(class='md:w-1/2 xl:w-1/3')
+          //-     // Metric Card
+          //-     .bg-white.border.rounded.shadow.p-2
+          //-       .flex.flex-row.items-center
+          //-         .flex-shrink.pr-4
+          //-           .rounded.p-3.bg-yellow-600
+          //-             i.fas.fa-user-plus.fa-2x.fa-fw.fa-inverse
+          //-         .flex-1.text-right(class='md:text-center')
+          //-           h5.font-bold.uppercase.text-gray-500 New Users
+          //-           h3.font-bold.text-3xl
+          //-             | 2 
+          //-             span.text-yellow-600
+          //-               i.fas.fa-caret-up
+          //-     // /Metric Card
+          //-   .w-full.p-3(class='md:w-1/2 xl:w-1/3')
+          //-     // Metric Card
+          //-     .bg-white.border.rounded.shadow.p-2
+          //-       .flex.flex-row.items-center
+          //-         .flex-shrink.pr-4
+          //-           .rounded.p-3.bg-blue-600
+          //-             i.fas.fa-server.fa-2x.fa-fw.fa-inverse
+          //-         .flex-1.text-right(class='md:text-center')
+          //-           h5.font-bold.uppercase.text-gray-500 Server Uptime
+          //-           h3.font-bold.text-3xl 152 days
+          //-     // /Metric Card
+          //-   .w-full.p-3(class='md:w-1/2 xl:w-1/3')
+          //-     // Metric Card
+          //-     .bg-white.border.rounded.shadow.p-2
+          //-       .flex.flex-row.items-center
+          //-         .flex-shrink.pr-4
+          //-           .rounded.p-3.bg-indigo-600
+          //-             i.fas.fa-tasks.fa-2x.fa-fw.fa-inverse
+          //-         .flex-1.text-right(class='md:text-center')
+          //-           h5.font-bold.uppercase.text-gray-500 To Do List
+          //-           h3.font-bold.text-3xl 7 tasks
+          //-     // /Metric Card
+          //-   .w-full.p-3(class='md:w-1/2 xl:w-1/3')
+          //-     // Metric Card
+          //-     .bg-white.border.rounded.shadow.p-2
+          //-       .flex.flex-row.items-center
+          //-         .flex-shrink.pr-4
+          //-           .rounded.p-3.bg-red-600
+          //-             i.fas.fa-inbox.fa-2x.fa-fw.fa-inverse
+          //-         .flex-1.text-right(class='md:text-center')
+          //-           h5.font-bold.uppercase.text-gray-500 Issues
+          //-           h3.font-bold.text-3xl
+          //-             | 3 
+          //-             span.text-red-500
+          //-               i.fas.fa-caret-up
+          //-     // /Metric Card
+          //- // Divider
+          //- hr.border-b-2.border-gray-400.my-8.mx-4
+          .mt-2
+            block content
+          // / Console Content
+    // /container
+    script.
+      /*Toggle dropdown list*/
+      var userMenuDiv = document.getElementById("userMenu");
+      var userMenu = document.getElementById("userButton");
+      var navMenuDiv = document.getElementById("nav-content");
+      var navMenu = document.getElementById("nav-toggle");
+      document.onclick = check;
+      function check(e) {
+      var target = (e && e.target) || (event && event.srcElement);
+      //User Menu
+      if (!checkParent(target, userMenuDiv)) {
+      // click NOT on the menu
+      if (checkParent(target, userMenu)) {
+      // click on the link
+      if (userMenuDiv.classList.contains("invisible")) {
+      userMenuDiv.classList.remove("invisible");
+      } else { userMenuDiv.classList.add("invisible"); }
+      } else {
+      // click both outside link and outside menu, hide menu
+      userMenuDiv.classList.add("invisible");
+      }
+      }
+      //Nav Menu
+      if (!checkParent(target, navMenuDiv)) {
+      // click NOT on the menu
+      if (checkParent(target, navMenu)) {
+      // click on the link
+      if (navMenuDiv.classList.contains("hidden")) {
+      navMenuDiv.classList.remove("hidden");
+      } else { navMenuDiv.classList.add("hidden"); }
+      } else {
+      // click both outside link and outside menu, hide menu
+      navMenuDiv.classList.add("hidden");
+      }
+      }
+      }
+      function checkParent(t, elm) {
+      while (t.parentNode) {
+      if (t == elm) { return true; }
+      t = t.parentNode;
+      }
+      return false;
+      }
+    block script
