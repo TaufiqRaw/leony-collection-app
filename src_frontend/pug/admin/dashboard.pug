@@ -1,1 +1,128 @@
 extends layout.pug
+
+block content
+  // Sales Overview
+  .card.mt-6
+    // header
+    .card-header.flex.flex-row.justify-between
+      h1.h6 Produksi overview
+    // end header
+    // body
+    .card-body.grid.grid-cols-1.gap-6(class='lg:grid-cols-2')
+      .p-8.flex.flex-col.gap-2
+        div
+          h1.h2 !{monthlyProduction}
+          p.text-black.font-medium Produksi Bulan Ini
+          if productionPercentage
+            if productionPercentage > 0
+              .mt-20.mb-2.flex.items-center
+                .py-1.px-3.rounded.bg-green-200.text-green-900.mr-3
+                  i.fa.fa-caret-up
+                p.text-black
+                  span.num-2.text-green-400
+                  span.text-green-400 !{productionPercentage} % Produksi
+                  |  dibandingkan dengan bulan lalu.
+            else
+              .flex.items-center
+                .py-1.px-3.rounded.bg-red-200.text-red-900.mr-3
+                  i.fa.fa-caret-down
+                p.text-black
+                  span.num-2.text-red-400 
+                  span.text-red-400 !{productionPercentage} % Produksi
+                  |  dibandingkan dengan bulan lalu.
+        div
+          h1.h2 !{dailyProduction[dailyProduction.length-1].amount}
+          p.text-black.font-medium Produksi Hari Ini
+            if dailyProduction.length > 1 && dailyProduction[dailyProduction.length-1].amount > dailyProduction[dailyProduction.length-2].amount && dailyProduction[dailyProduction.length-2].amount > 0
+              - let dailyPercentage = Math.round((dailyProduction[dailyProduction.length-1].amount - dailyProduction[dailyProduction.length-2].amount) / dailyProduction[dailyProduction.length-2].amount * 100)
+              if dailyPercentage > 0
+                .mt-20.mb-2.flex.items-center
+                  .py-1.px-3.rounded.bg-green-200.text-green-900.mr-3
+                    i.fa.fa-caret-up
+                  p.text-black
+                    span.num-2.text-green-400
+                    span.text-green-400 !{dailyPercentage} % Produksi
+                    |  dibandingkan dengan kemarin.
+              else
+                .flex.items-center
+                  .py-1.px-3.rounded.bg-red-200.text-red-900.mr-3
+                    i.fa.fa-caret-down
+                  p.text-black
+                    span.num-2.text-red-400 
+                    span.text-red-400 !{dailyPercentage} % Produksi
+                    |  dibandingkan dengan kemarin.
+      div
+        canvas#productionChart
+    // end body
+  // end Sales Overview
+  // start numbers
+  .grid.grid-cols-1.gap-6(class='xl:grid-cols-2')
+    // card
+    .card.mt-6
+      .card-body.flex.items-center
+        .px-3.py-2.rounded.bg-indigo-600.text-white.mr-3
+          i.fad.fa-tshirt
+        .flex.flex-col
+          h1.font-semibold
+            span.num-2
+            |  Jenis produk terbanyak bulan ini
+          p.text-xs
+            span.num-2
+            |  !{mostType[0].name} | !{mostType[0].amount} Keping
+    // end card
+    // card
+    .card.mt-6
+      .card-body.flex.items-center
+        .px-3.py-2.rounded.bg-yellow-600.text-white.mr-3
+          i.fad.fa-user
+        .flex.flex-col
+          h1.font-semibold
+            span.num-2
+            |  Pegawai paling produktif bulan ini
+          p.text-xs
+            span.num-2
+            |  active
+    // end card
+    //- // card
+    //- .card.mt-6
+    //-   .card-body.flex.items-center
+    //-     .px-3.py-2.rounded.bg-pink-600.text-white.mr-3
+    //-       i.fad.fa-user
+    //-     .flex.flex-col
+    //-       h1.font-semibold
+    //-         span.num-2
+    //-         |  Produksi Hari ini
+    //-       p.text-xs
+    //-         span.num-2
+    //-         |  online
+    // end card
+  // end nmbers
+  // start quick Info
+  .grid.gap-6.mt-6.grid-cols-1
+    // Start Recent Sales
+    .card(class='xl:col-span-1')
+      .card-header Produksi Terakhir
+      table.table-auto.w-full.text-left
+        thead
+          tr
+            th.px-4.py-2.border-r
+            th.px-4.py-2.border-r dibuat oleh
+            th.px-4.py-2.border-r Tipe
+            th.px-4.py-2.border-r Jumlah
+            th.px-4.py-2 Jangka Waktu
+        tbody.text-gray-600
+          each product in recentProduction[0]
+            tr
+              td.border.border-l-0.px-4.py-2.text-center.text-green-500.grid.place-content-center
+                img.w-10.h-10.rounded-full(src=(product.user.unwrap().profilePicture ? `/user_img/${product.user.unwrap().profilePicture}` : 'default-user.svg') alt='profile picture')
+              td.border.border-l-0.px-4.py-2 !{product.user.unwrap().name}
+              td.border.border-l-0.px-4.py-2 !{product.type.unwrap().name}
+              td.border.border-l-0.px-4.py-2 !{product.amount}
+              td.border.border-l-0.border-r-0.px-4.py-2 !{product.timeAgo}
+    // End Recent Sales
+  // end quick Info
+
+block script
+  script.
+    const productionData = !{JSON.stringify(dailyProduction)}
+  script(src="/scripts/admin.dashboard.js")   

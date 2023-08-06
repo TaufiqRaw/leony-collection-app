@@ -34,8 +34,18 @@ export class AuthNController{
       req.flash('error', 'Invalid username or password')
       return res.redirect('/auth/login')
     }
-
     req.session.user = userEntity
+
+    if(userEntity.isAdmin)
+      return res.redirect('/admin')
     res.redirect('/dashboard')
+  }
+
+  async logout(req : Request, res : Response){
+    req.session.destroy(err=>{
+      if(err)
+        throw new ExpressError('Failed to logout', 500)
+      res.redirect('/auth/login')
+    })
   }
 }

@@ -11,7 +11,7 @@ export class Route {
 
   private handlerWrapper(requestHandler : RequestHandler){
     return (req : Request, res : Response,next : NextFunction)=>{
-      const result : any = Promise.resolve(requestHandler(req,res,next)).catch((err)=>{
+      Promise.resolve(requestHandler(req,res,next)).catch((err)=>{
         return next(err)
       })
     }

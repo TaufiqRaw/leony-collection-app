@@ -1,0 +1,46 @@
+extends ../layout.pug
+
+block content
+  .flex.flex-col.gap-4
+    .flex.flex-row.gap-2
+      h1.text-2xl.font-semibold.mb-4 Jenis Produk
+      a(href='/admin/produk/add').btn.btn-primary.text-white.font-bold.rounded
+        | Tambah Jenis Produk
+    .bg-white.rounded-lg.shadow-lg.overflow-hidden
+      table.w-full.table-auto
+        thead
+          tr.border
+            th.px-4.py-2.border(rowspan=2) Produk
+            th.px-4.py-2.border(colspan=3) Gaji / Keping
+        tbody
+        each product in productionTypes[0]
+          tr.relative.group
+            td.border.px-4.py-2 #{product.name}
+            td.border.px-4.py-2 #{product.salary}
+            td.absolute.right-0.top-0.hidden(class="group-hover:flex gap-2")
+              a(href=`/admin/produk/${product.id}/edit`)
+                button.bg-blue-500.text-white.font-bold.py-2.px-4.rounded(class='hover:bg-blue-700')
+                  | Edit
+              form(action=`/admin/produk/${product.id}?_method=DELETE` method='POST')
+                button.bg-red-500.text-white.font-bold.py-2.px-4.rounded(class='hover:bg-red-700')
+                  | Delete
+  //create pagination param
+  - var page = pagination.page
+  - var limit = pagination.limit
+  - var total = productionTypes[1]
+  - var totalPage = Math.ceil(total/limit)
+  - var url = '/admin/produk'
+  - var urlPage = '/admin/produk?page='
+  - var urlLimit = '&limit='
+  - var urlPagePrev = page - 1
+  - var urlPageNext = page + 1
+  - var urlPagePrevDisabled = page == 1 ? 'pointer-events-none bg-white text-blue-500' : 'bg-blue-500 text-white'
+  - var urlPageNextDisabled = page == totalPage ? 'pointer-events-none bg-white text-blue-500' : 'bg-blue-500 text-white'
+  .flex.flex-row.items-center.justify-center.gap-2.mt-5
+    a(href=`${urlPage}${urlPagePrev}${urlLimit}${limit}` class=`${urlPagePrevDisabled}`).btn.font-bold.rounded
+      | Prev
+    each i in [...Array(totalPage).keys()]
+      a(href=`${urlPage}${i+1}${urlLimit}${limit}` class=`${page == i+1 ? 'bg-blue-500' : 'bg-white hover:bg-gray-200 text-blue-500'}`).btn.bg-blue-500.text-white.font-bold.rounded
+        | #{i+1}
+    a(href=`${urlPage}${urlPageNext}${urlLimit}${limit}` class=`${urlPageNextDisabled}`).btn.font-bold.rounded
+      | Next

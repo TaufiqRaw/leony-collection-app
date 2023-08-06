@@ -10,7 +10,9 @@ import {routes} from "./routes";
 import session from "express-session"
 import flash from "connect-flash"
 import "./types/express.type"
+import moment from "moment"
 import { back } from "./modules/common/middleware/back.middleware";
+import methodOverride from "method-override"
 
 new Server({
   port: process.env.PORT || 3000,
@@ -27,6 +29,7 @@ new Server({
     // }),
     Express.urlencoded({extended: true}),
     Express.static(path.join(__dirname, "../public")),
+    methodOverride('_method'),
     session({
       secret : "secret",
       resave : false,
@@ -45,6 +48,7 @@ new Server({
   },
   onReq : (req, res) => {
     res.locals.error = req.flash("error")
+    res.locals.dateify = (time: Date)=>moment(time).utcOffset(7)
     res.locals.success = req.flash("success")
   },
   routes : [...routes],

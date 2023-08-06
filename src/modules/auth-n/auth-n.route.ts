@@ -8,4 +8,6 @@ route.chain("/login")
   .get(redirectLoggedInMiddleware,[AuthNController, "loginPage"])
   .post([AuthNController, "login"])
 
+route.get("/logout", [AuthNController, "logout"])
+
 export default route.build();

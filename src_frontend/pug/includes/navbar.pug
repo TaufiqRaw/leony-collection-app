@@ -1,0 +1,45 @@
+nav#header.bg-white.fixed.w-full.z-10.top-0.shadow
+  .w-full.container.mx-auto.flex.flex-wrap.items-center.mt-0.pt-3.pb-3(class='md:pb-0')
+    .pl-2(class=' mr-5 md:pl-0')
+      a.text-gray-900.text-base.no-underline.font-bold(class='xl:text-xl hover:no-underline' href='/dashboard')
+        i.fas.fa-sun.text-pink-600.pr-3
+        | #{env.APP_NAME}
+    #nav-content.w-full.flex-grow.hidden.mt-2.bg-white.z-20(class=' lg:items-center lg:w-auto lg:block lg:mt-0')
+      ul.list-reset.flex-1.items-center.px-4(class='lg:flex md:px-0')
+        li.mr-6.my-2(class='md:my-0')
+          a.block.py-1.pl-1.align-middle.text-pink-600.no-underline.border-b-2.border-orange-600(href='#' class='md:py-3 hover:text-gray-900 hover:border-orange-600')
+            i.fas.fa-home.fa-fw.mr-3.text-pink-600
+            span.pb-1.text-sm(class='md:pb-0') Home
+        //- li.mr-6.my-2(class='md:my-0')
+        //-   a.block.py-1.pl-1.align-middle.text-gray-500.no-underline.border-b-2.border-white(href='#' class='md:py-3 hover:text-gray-900 hover:border-pink-500')
+        //-     i.fas.fa-tasks.fa-fw.mr-3
+        //-     span.pb-1.text-sm(class='md:pb-0') Tasks
+        //- li.mr-6.my-2(class='md:my-0')
+        //-   a.block.py-1.pl-1.align-middle.text-gray-500.no-underline.border-b-2.border-white(href='#' class='md:py-3 hover:text-gray-900 hover:border-purple-500')
+        //-     i.fa.fa-envelope.fa-fw.mr-3
+        //-     span.pb-1.text-sm(class='md:pb-0') Messages
+        //- li.mr-6.my-2(class='md:my-0')
+        //-   a.block.py-1.pl-1.align-middle.text-gray-500.no-underline.border-b-2.border-white(href='#' class='md:py-3 hover:text-gray-900 hover:border-green-500')
+        //-     i.fas.fa-chart-area.fa-fw.mr-3
+        //-     span.pb-1.text-sm(class='md:pb-0') Analytics
+        //- li.mr-6.my-2(class='md:my-0')
+        //-   a.block.py-1.pl-1.align-middle.text-gray-500.no-underline.border-b-2.border-white(href='#' class='md:py-3 hover:text-gray-900 hover:border-red-500')
+        //-     i.fa.fa-wallet.fa-fw.mr-3
+        //-     span.pb-1.text-sm(class='md:pb-0') Payments
+    if user
+      .flex.relative.inline-block.float-right
+        .relative.text-sm
+          button#userButton.flex.items-center.mr-3(class='focus:outline-none')
+            img.w-8.h-8.rounded-full.mr-4(src=(user.profilePicture ? `/user_img/${user.profilePicture}` : 'default-user.svg') alt='Avatar of User')
+            span.hidden(class='md:inline-block') !{(new Date().getHours() < 12) ? 'Selamat Pagi' : (new Date().getHours() < 18) ? 'Selamat Siang' : 'Selamat Malam'}, #{user.name} 
+          #userMenu.bg-white.rounded.shadow-md.mt-2.absolute.mt-12.top-5.right-0.min-w-full.overflow-auto.z-30.invisible
+            ul.list-reset
+              li
+                a.px-4.py-2.flex.gap-2.items-center.text-gray-900.no-underline(href='/auth/logout' class='hover:bg-gray-400 hover:no-underline')
+                 | #[div Logout]
+                 | #[i.fas.fa-sign-out-alt.mt-1]
+        .block.pr-4(class='lg:hidden')
+          button#nav-toggle.flex.items-center.px-3.py-2.border.rounded.text-gray-500.border-gray-600.appearance-none(class='hover:text-gray-900 hover:border-teal-500 focus:outline-none')
+            svg.fill-current.h-3.w-3(viewbox='0 0 20 20' xmlns='http://www.w3.org/2000/svg')
+              title Menu
+              path(d='M0 3h20v2H0V3zm0 6h20v2H0V9zm0 6h20v2H0v-2z')

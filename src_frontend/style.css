@@ -7,7 +7,7 @@
 }
 
 .btn {
-  @apply text-base font-semibold px-4 py-2 shadow outline-none focus:outline-none rounded-md
+  @apply text-base font-semibold px-4 h-max p-2 grid place-content-center shadow outline-none focus:outline-none rounded-md
   ease-linear hover:shadow-lg  transition-all duration-150;
 }
 
@@ -61,4 +61,57 @@ p{
 
 .h6{
   @apply text-xl font-extrabold
+}
+
+@keyframes animate-error {
+  0% {
+    opacity: 1;
+    transform: translateX(-52%);
+  }
+  2% {
+    transform: translateX(-48%);
+  }
+  4% {
+    transform: translateX(-52%);
+  }
+  6% {
+    transform: translateX(-48%);
+  }
+  8% {
+    transform: translateX(-50%);
+  }
+  80% {
+    opacity: 1;
+    transform: translateX(-50%);
+  }
+  100% {
+    transform: translate(-50%, -10px);
+    opacity: 0;
+  }
+}
+
+@keyframes animate-success {
+  0% {
+    opacity: 1;
+  }
+  80% {
+    opacity: 1;
+    transform: translateX(-50%);
+  }
+  100% {
+    transform: translate(-50%, -10px);
+    opacity: 0;
+  }
+}
+
+.animate-error{
+  animation: animate-error;
+  animation-duration: 3s;
+  @apply pointer-events-none
+}
+
+.animate-success{
+  animation: animate-success;
+  animation-duration: 3s;
+  @apply pointer-events-none
 }

@@ -1,23 +1,38 @@
 import {Chart, registerables} from 'chart.js';
 Chart.register(...registerables);
 
+interface ContributionsType {
+  name: string;
+  amount: number;
+}
+
+declare var contributionsType : ContributionsType[];
+
 const ctx = document.getElementById('myChart') as HTMLCanvasElement;
 console.log(ctx)
 
 const myChart = new Chart(ctx, {
   type: 'bar',
   data: {
-    labels: ['Red', 'Blue', 'Yellow', 'Green', 'Purple', 'Orange'],
+    labels: contributionsType.map(item => item.name),
     datasets: [{
-      label: '# of Votes',
-      data: [12, 19, 3, 5, 2, 3],
+      label: '# Produk',
+      data: contributionsType.map(item => item.amount),
       borderWidth: 1
     }]
   },
   options: {
     scales: {
       y: {
-        beginAtZero: true
+        beginAtZero: true,
+        ticks: {
+          stepSize: 1
+        }
+      },
+      x: {
+        ticks: {
+            maxTicksLimit: 8
+        }
       }
     }
   }
@@ -25,15 +40,10 @@ const myChart = new Chart(ctx, {
 
 interface ContributionData {
   date: string;
-  count: number;
+  amount: number;
 }
 
-// Sample data (replace this with your actual data)
-const contributionsData = [
-  { date: '2023-07-01', count: 1 },
-  { date: '2023-07-05', count: 3 },
-  // Add more data as needed
-];
+declare var contributionsData: ContributionData[];
 
 // Function to generate the contribution calendar
 function generateCalendar(data : ContributionData[]) {
@@ -46,13 +56,14 @@ function generateCalendar(data : ContributionData[]) {
 
   let currentDate = new Date();
   currentDate.setDate(currentDate.getDate() - 30); // Display one year's worth of contributions
+  console.log(data)
 
   for (let i = 0; i < 31; i++) {
     const dateStr = currentDate.toISOString().slice(0, 10);
-    const contributionData = data.find(item => item.date === dateStr);
-
-    const contributionCount = contributionData ? contributionData.count : 0;
-
+    const contributionData = data.find(item => item.date.split("T")[0] === dateStr);
+    
+    const contributionCount = contributionData ? contributionData.amount : 0;
+    
     const cell = document.createElement('div');
     cell.className = `h-8 w-8 
       flex items-center justify-center text-xs font-medium

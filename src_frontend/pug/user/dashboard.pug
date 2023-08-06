@@ -1,6 +1,12 @@
 extends layout.pug
 
 block content
+  if error != ""
+    .fixed.top-10.animate-error.opacity-0.z-10.bg-red-500.p-2.rounded-md.text-white.transform.w-max(class="left-1/2 -translate-x-1/2")
+      | #{error}
+  if success != ""
+    .fixed.top-10.z-10.animate-success.opacity-0.bg-green-500.p-2.rounded-md.text-white.transform.w-max(class="left-1/2 -translate-x-1/2")
+      | #{success}
   .flex.gap-3.flex-col(class="lg:flex-row")
     .flex.flex-col(class="lg:grow")
       .card.h-min
@@ -17,30 +23,38 @@ block content
         .card.mt-6
           .card-body.flex.items-center
             .px-3.py-2.rounded.bg-indigo-600.text-white.mr-3
-              i.fad.fa-wallet
+              i.fad.fa-calendar-day
             .flex.flex-col
               h1.font-semibold
                 span.num-2
-                |  Sales
-              p.text-xs
-                span.num-2
-                |  payments
+                |  Hasil Produksi Hari Ini
+              p.text-xs !{todayContribution} Produk
         // end card
         // card
         .card.mt-6
           .card-body.flex.items-center
             .px-3.py-2.rounded.bg-indigo-600.text-white.mr-3
-              i.fad.fa-wallet
+              i.fad.fa-calendar-alt
             .flex.flex-col
               h1.font-semibold
                 span.num-2
-                |  Sales
-              p.text-xs
+                |  Hasil Produksi Bulan Ini
+              p.text-xs !{monthContribution} Produk
+        // end card
+        // card
+        .card.mt-6
+          .card-body.flex.items-center
+            .px-3.py-2.rounded.bg-indigo-600.text-white.mr-3
+              i.fad.fa-calendar-star
+            .flex.flex-col
+              h1.font-semibold
                 span.num-2
-                |  payments
+                |  Hasil Produksi Tahun Ini
+              p.text-xs
+                span.num-2 !{yearContribution} Produk
         // end card
     .flex.gap-3.flex-col
-      .card.h-min
+      .card.h-min(class="lg:w-80")
         // header
         .card-header.flex.flex-row.justify-between
           h1.h6 Riwayat Hasil Kerja
@@ -51,12 +65,9 @@ block content
           hr.w-full.my-2
           .flex.flex-col.gap-2.px-2.w-full
             .h-20(data-simplebar data-simplebar-auto-hide="false")
-              div #[span.font-medium 03/07/2021] - #[span.text-gray-500 3 Piece Diselesaikan]
-              div #[span.font-medium 03/07/2021] - #[span.text-gray-500 3 Piece Diselesaikan]
-              div #[span.font-medium 03/07/2021] - #[span.text-gray-500 3 Piece Diselesaikan]
-              div #[span.font-medium 03/07/2021] - #[span.text-gray-500 3 Piece Diselesaikan]
-              div #[span.font-medium 03/07/2021] - #[span.text-gray-500 3 Piece Diselesaikan]
-              div #[span.font-medium 03/07/2021] - #[span.text-gray-500 3 Piece Diselesaikan]
+              for contribution of contributionsLog
+                -format = 'DD/MM/YYYY'
+                div #[span.font-medium #{dateify(contribution.createdAt).format(format)}] - #[span.text-gray-500 #{contribution.amount} Produk Diselesaikan]
         // end body
       .card.h-min
         // header
@@ -64,14 +75,20 @@ block content
           h1.h6 Laporkan Hasil
         // end header
         // body
-        .p-5.flex.flex-col.items-center.gap-3
+        form.p-5.flex.flex-col.items-center.gap-3(action="/dashboard/add-production-log" method="POST")
           .flex.items-center.gap-2.text-2xl
             i(class="fa fas fa-shirt")
-            input#jobResult.input.text-lg(type="number" name="jobResult" min="0" max="100" value="0")
+            input#jobResult.input.text-lg(type="number" name="amount" min="0" max="100" value="0")
+          .flex.items-center.gap-2.text-2xl
+            select#jobType.input.text-lg(name="type")
+              option(value="") Pilih jenis produk
+              each productionType in productionTypes
+                option(value=`${productionType.id}`) #{productionType.name}
           button.btn.btn-primary(type='submit') Tambah ke hasil hari ini
         // end body
 
 block script
+  script.
+    const contributionsData = !{JSON.stringify(contributionsData)}
+    const contributionsType = !{JSON.stringify(contributionsType)}
   script(src="scripts/user.dashboard.js")
-
-    
