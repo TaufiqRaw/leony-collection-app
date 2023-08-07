@@ -30,7 +30,7 @@ nav#header.bg-white.fixed.w-full.z-10.top-0.shadow
       .flex.relative.inline-block.float-right
         .relative.text-sm
           button#userButton.flex.items-center.mr-3(class='focus:outline-none')
-            img.w-8.h-8.rounded-full.mr-4(src=(user.profilePicture ? `/user_img/${user.profilePicture}` : 'default-user.svg') alt='Avatar of User')
+            img.w-8.h-8.rounded-full.mr-4(src=(user.profilePicture ? `/user_img/${user.profilePicture}` : '/default-user.svg') alt='Avatar of User')
             span.hidden(class='md:inline-block') !{(new Date().getHours() < 12) ? 'Selamat Pagi' : (new Date().getHours() < 18) ? 'Selamat Siang' : 'Selamat Malam'}, #{user.name} 
           #userMenu.bg-white.rounded.shadow-md.mt-2.absolute.mt-12.top-5.right-0.min-w-full.overflow-auto.z-30.invisible
             ul.list-reset

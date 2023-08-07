@@ -3,7 +3,7 @@ import path from "path"
 import httpContext from "express-http-context"
 import { MikroORM, PostgreSqlDriver } from "@mikro-orm/postgresql"
 import { Options } from "@mikro-orm/core"
-import { InstanceMap } from "@/utils/classes/instance-map.util"
+import { InstanceMap } from "../../utils/classes/instance-map.util"
 
 //TODO: fix values and make it more detailed
 interface ExpressSetting {

@@ -1,4 +1,4 @@
-import { getService } from "@/utils/get-service.util"
+import { getService } from "../../utils/get-service.util"
 import { Request, Response } from "express"
 import { UserService } from "./user.service"
 

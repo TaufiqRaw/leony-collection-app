@@ -1,5 +1,5 @@
-import { getService } from "@/utils/get-service.util"
-import { validateRequest } from "@/utils/validate-request.util"
+import { getService } from "../../utils/get-service.util"
+import { validateRequest } from "../../utils/validate-request.util"
 import { wrap } from "@mikro-orm/core"
 import { Request, Response } from "express"
 import { ProductionLogService } from "../production-log/prodution-log.service"
@@ -17,7 +17,7 @@ export class DashboardController{
     const todayContribution = (await this.productionLogService.getTotalUserCount(id, new Date()))[0].amount;
     const monthContribution = (await this.productionLogService.getTotalUserCountMonth(id, new Date().getFullYear(), new Date().getMonth() + 1))[0].amount;
     const yearContribution = (await this.productionLogService.getTotalUserCountYear(id, new Date().getFullYear()))[0].amount;
-    const contributionsType = await this.productionLogService.getTotalTypeCountMonth(new Date().getFullYear(), new Date().getMonth() + 1)
+    const contributionsType = await this.productionLogService.getTotalTypeCountMonth(id ,new Date().getFullYear(), new Date().getMonth() + 1)
     const contributionsData = await this.productionLogService.getLogTotalAmountDay(id, new Date(), 31)
     const contributionsLog = await this.productionLogService.getLogByUser(id, {
       createdAt : {$gte : new Date((new Date()).setDate((new Date()).getDate() - 31))}

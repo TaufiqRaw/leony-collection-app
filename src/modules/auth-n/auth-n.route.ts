@@ -1,4 +1,4 @@
-import { Route } from "@/utils/classes/route.util";
+import { Route } from "../../utils/classes/route.util";
 import { AuthNController } from "./auth-n.controller";
 import { redirectLoggedInMiddleware } from "./middlewares/redirect-logged-in.middleware";
 

@@ -1,4 +1,3 @@
-import { Class } from "@/types/class.type";
 import { RequestHandler } from "express";
 import httpContext from "express-http-context";
 

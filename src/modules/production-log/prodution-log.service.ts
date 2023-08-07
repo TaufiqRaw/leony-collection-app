@@ -1,5 +1,5 @@
-import { getEntityManager } from "@/utils/get-entity-manager.util";
-import { getRepository } from "@/utils/get-repository.util";
+import { getEntityManager } from "../../utils/get-entity-manager.util";
+import { getRepository } from "../../utils/get-repository.util";
 import { FilterQuery, FindOptions, wrap } from "@mikro-orm/core";
 import { DatabaseService } from "../common/class/database.service";
 import { ProductionLog, ProductionLogProps } from "./prodution-log.entity";
@@ -54,12 +54,13 @@ export class ProductionLogService extends DatabaseService<ProductionLog, Product
     return await qb.execute()
   }
 
-  async getTotalTypeCountMonth(year : number,month : number) {
+  async getTotalTypeCountMonth(id: number ,year : number,month : number) {
     const qb = this.productionLogRepository.qb('pl');
     const qbr = qb.select("SUM(amount) as amount, pt.name as name")
       .leftJoin('pl.type', 'pt')
       .where("EXTRACT(YEAR from pl.created_at) = ?", [year])
       .andWhere("EXTRACT(MONTH from pl.created_at) = ?", [month])
+      .andWhere("pl.user_id = ?", [id])
       .groupBy('pt.id')
       .getKnexQuery()
 
@@ -80,29 +81,58 @@ export class ProductionLogService extends DatabaseService<ProductionLog, Product
     return await this.em.persistAndFlush(new ProductionLog(log))
   }
 
-  async aggregateDailyAmount(userId: number) {
-    return await this.productionLogRepository.createQueryBuilder("pl")
-      .select('SUM(pl.amount) as amount')
-      .where({user : userId})
-      .andWhere("DATE(pl.created_at) = Date(now())")
-      .execute();
-  }
+  async getAllUserWithAmount(limit : number = 6, offset : number = 0, orderBy ? : "today_amount" | "month_amount" | "year_amount", order : "asc" | "desc" = "desc") {
+    const qbr1 = this.productionLogRepository.getKnex()
+      .sum('amount', {as : 'today_amount'})
+      .select('u.id as user_id', 'u.name as name', 'u.profile_picture as profile_picture')
+      .from('user as u')
+      .leftJoin(
+        this.productionLogRepository.getKnex()
+          .from('production_log')
+          .whereRaw("DATE(created_at)=DATE(now())")
+          .as('pl')
+        , 'u.id', 'pl.user_id')
+      .groupBy('u.id')
+      
+      const qbr2 = this.productionLogRepository.getKnex()
+      .sum('amount', {as : 'month_amount'})
+      .select('u.id as user_id', 'u.name as name', 'u.profile_picture as profile_picture')
+      .from('user as u')
+      .leftJoin(
+        this.productionLogRepository.getKnex()
+          .from('production_log')
+          .whereRaw("EXTRACT(YEAR from created_at)=EXTRACT(YEAR from now())")
+          .andWhereRaw("EXTRACT(MONTH from created_at)=EXTRACT(MONTH from now())")
+          .as('pl')
+        , 'u.id', 'pl.user_id'
+      )
+      .groupBy('u.id')
+      
+    const qbr3 = this.productionLogRepository.getKnex()
+      .sum('amount', {as : 'year_amount'})
+      .select('u.id as user_id', 'u.name as name', 'u.profile_picture as profile_picture')
+      .from('user as u')
+      .leftJoin(
+        this.productionLogRepository.getKnex()
+          .from('production_log')
+          .whereRaw("EXTRACT(YEAR from created_at)=EXTRACT(YEAR from now())")
+          .as('pl')
+        , 'u.id', 'pl.user_id'
+      )
+      .groupBy('u.id')
 
-  async aggregateMonthlyAmount(userId: number) {
-    return  await this.productionLogRepository.createQueryBuilder("pl")
-      .select('SUM(pl.amount) as amount')
-      .where({user : userId})
-      .andWhere("EXTRACT(YEAR from pl.created_at) = EXTRACT(YEAR from now())")
-      .andWhere("EXTRACT(MONTH from pl.created_at) = EXTRACT(MONTH from now())")
-      .execute();
-  }
+    const knex = this.productionLogRepository.getKnex()
+    const knexQuery = 
+      knex
+        .select("*")
+        .from(qbr3.as('t1'))
+          .leftJoin(qbr2.as('t2'), 't1.user_id', 't2.user_id')
+          .leftJoin(qbr1.as('t3'), 't2.user_id', 't3.user_id')
+        .limit(limit)
+        .offset(offset)
 
-  async aggregateYearlyAmount(userId: number) {
-    return  await this.productionLogRepository.createQueryBuilder("pl")
-      .select('SUM(pl.amount) as amount')
-      .where({user : userId})
-      .andWhere("EXTRACT(YEAR from pl.created_at) = EXTRACT(YEAR from now())")
-      .execute();
+      orderBy && knexQuery.orderBy(orderBy, order, order == 'asc' ? 'first' : 'last')
+    return  this.productionLogRepository.getEntityManager().getConnection().execute(knexQuery);
   }
 
   async getLogTotalAmountDay(userId: number, date: Date, length : number) {
@@ -119,6 +149,40 @@ export class ProductionLogService extends DatabaseService<ProductionLog, Product
 
   async getLogByUser(userId: number, query : FilterQuery<ProductionLog> = {}, options ?: FindOptions<ProductionLog>) {
     //@ts-ignore
-    return await this.productionLogRepository.find({...query, user : userId}, options)
+    return await this.productionLogRepository.findAndCount({...query, user : userId}, options)
+  }
+
+  async getLogTotalGroupByType(userId : number) {
+    const qb = this.productionLogRepository.createQueryBuilder('pl')
+      qb
+        .select("SUM(amount) as amount, pt.name as name, pt.salary as salary")
+        .leftJoin('pl.type', 'pt')
+        .where("DATE(pl.created_at)=DATE(now())")
+        .andWhere('user_id = ?', [userId])
+        .groupBy('pt.id')
+    return await qb.execute()
+  }
+
+  async getLogTotalGroupByTypeMonth(userId : number, year : number, month : number) {
+    const qb = this.productionLogRepository.createQueryBuilder('pl')
+      qb
+        .select("SUM(amount) as amount, pt.name as name, pt.salary as salary")
+        .leftJoin('pl.type', 'pt')
+        .where("EXTRACT(YEAR from pl.created_at)=?", [year])
+        .andWhere("EXTRACT(MONTH from pl.created_at)=?", [month])
+        .andWhere('user_id = ?', [userId])
+        .groupBy('pt.id')
+    return await qb.execute()
+  }
+
+  async getLogTotalGroupByTypeYear(userId : number, year : number) {
+    const qb = this.productionLogRepository.createQueryBuilder('pl')
+      qb
+        .select("SUM(amount) as amount, pt.name as name, pt.salary as salary")
+        .leftJoin('pl.type', 'pt')
+        .where("EXTRACT(YEAR from pl.created_at)=?", [year])
+        .andWhere('user_id = ?', [userId])
+        .groupBy('pt.id')
+    return await qb.execute()
   }
 }

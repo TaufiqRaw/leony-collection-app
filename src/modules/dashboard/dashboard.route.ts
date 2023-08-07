@@ -1,4 +1,4 @@
-import { Route } from "@/utils/classes/route.util";
+import { Route } from "../../utils/classes/route.util";
 import { mustLoginMiddleware } from "../auth-n/middlewares/must-login.middleware";
 import { DashboardController } from "./dashboard.controller";
 

@@ -1,4 +1,4 @@
-import { getRepository } from "@/utils/get-repository.util";
+import { getRepository } from "../../utils/get-repository.util";
 import { QueryOrder } from "@mikro-orm/core";
 import { DatabaseService } from "../common/class/database.service";
 import { ProductionType, ProductionTypeProps } from "./production-type.entity";
@@ -25,7 +25,6 @@ export class ProductionTypeService extends DatabaseService<ProductionType, Produ
       .groupBy('pt.id')
       .where("EXTRACT(YEAR from pl.created_at) = ?", [year])
       .andWhere("EXTRACT(MONTH from pl.created_at) = ?", [month])
-      .limit(1)
       .getKnexQuery()
 
     const knex = this.productionTypeRepository.getKnex()

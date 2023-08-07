@@ -1,4 +1,3 @@
-import { Class } from "@/types/class.type";
 import { NextFunction, Request, Response, Router } from "express";
 import { getController } from "../get-controller.util";
 

@@ -1,4 +1,4 @@
-import { IsNotEmpty, IsOptional, IsString } from "class-validator";
+import { IsNotEmpty, IsOptional, IsString, Min, MinLength } from "class-validator";
 
 export class EditUserDto {
   @IsOptional()
@@ -7,5 +7,6 @@ export class EditUserDto {
 
   @IsOptional()
   @IsString()
+  @MinLength(8)
   password : string;
 } 

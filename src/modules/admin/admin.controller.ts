@@ -1,5 +1,5 @@
-import { getService } from "@/utils/get-service.util";
-import { validateRequest } from "@/utils/validate-request.util";
+import { getService } from "../../utils/get-service.util";
+import { validateRequest } from "../../utils/validate-request.util";
 import { Request, Response } from "express";
 import _ from "lodash";
 import moment from "moment";
@@ -41,14 +41,42 @@ export class AdminController {
 
   async user(req : Request, res : Response) {
     const pagination = getPagination(req)
-    const rawUsers = await this.userService.findAndPaginate({}, 1, 10);
-    const users = await Promise.all(rawUsers[0].map(async(user) => {
-      const today = (await this.productionLogService.aggregateDailyAmount(user.id!))[0]
-      const month = (await this.productionLogService.aggregateMonthlyAmount(user.id!))[0]
-      const year = (await this.productionLogService.aggregateYearlyAmount(user.id!))[0]
-      return {...user, today, month, year}
-    }))
-    return res.render('admin/user/index', {users : [users, rawUsers[1]], pagination})
+    let {orderBy : rawOrderBy, order : rawOrder} = req.query;
+    const orderBy = rawOrderBy == "" || !rawOrderBy ?  undefined : rawOrderBy  as ("today_amount" | "month_amount" | "year_amount");
+    const order = rawOrder == "" || !rawOrder ?  undefined : rawOrder.toString().toLowerCase() as ("asc" | "desc");
+    const users = await this.productionLogService.getAllUserWithAmount(pagination.limit, pagination.offset, orderBy, order)
+    const userCount = await this.userService.count()
+
+    return res.render('admin/user/index', {users : [users, userCount], pagination, ordering : {orderBy, order}})
+  }
+
+  async showUser(req : Request, res : Response) {
+    const id = _.parseInt(req.params.id)
+    if(!id){
+      req.flash('error', 'User tidak ditemukan')
+      return res.redirect('/admin/user')
+    }
+
+    try{
+      const pagination = getPagination(req)
+      const data = await this.userService.findOne(id)
+      const contributionsData = await this.productionLogService.getLogTotalAmountDay(id, new Date(), 31)
+      const contributionsLog = await this.productionLogService.getLogByUser(id, {
+        createdAt : {$gte : new Date((new Date()).setDate((new Date()).getDate() - 31))}
+      },{limit : 31, orderBy : {createdAt : 'DESC'}})
+      const todayContribution = (await this.productionLogService.getTotalUserCount(id, new Date()))[0].amount;
+      const monthContribution = (await this.productionLogService.getTotalUserCountMonth(id, new Date().getFullYear(), new Date().getMonth() + 1))[0].amount;
+      const yearContribution = (await this.productionLogService.getTotalUserCountYear(id, new Date().getFullYear()))[0].amount;
+      const contributionsType = await this.productionLogService.getTotalTypeCountMonth(id ,new Date().getFullYear(), new Date().getMonth() + 1)
+      const contributionsLogFull = await this.productionLogService.getLogByUser(id, {}, {orderBy : {createdAt : 'DESC'}, populate : ['type'] as never[], limit : pagination.limit, offset : pagination.offset})
+      const todaySalary = (await this.productionLogService.getLogTotalGroupByType(id))[0]
+      const monthSalary = (await this.productionLogService.getLogTotalGroupByTypeMonth(id, new Date().getFullYear(), new Date().getMonth() + 1))[0]
+      const yearSalary = (await this.productionLogService.getLogTotalGroupByTypeYear(id, new Date().getFullYear()))[0]
+      return res.render('admin/user/show', {data, contributionsData, contributionsLog, monthContribution, yearContribution, contributionsType, contributionsLogFull, pagination, todaySalary, monthSalary, yearSalary, todayContribution})
+    }catch(err){
+      req.flash('error', 'User tidak ditemukan')
+      return res.redirect('/admin/user')
+    }
   }
 
   async addUserForm(req : Request, res : Response) {
@@ -63,7 +91,12 @@ export class AdminController {
     if(!reqData)
       return res.redirect('/admin/user/add');
 
-    await this.userService.create({...reqData, isAdmin : false, profilePicture : req.file? req.file.filename : undefined})
+    try{
+      await this.userService.create({...reqData, isAdmin : false, profilePicture : req.file? req.file.filename : undefined})
+    } catch(err){
+      req.flash('error', "Something went wrong")
+      return res.redirect('/admin/user/add');
+    }
     req.flash('success', 'User berhasil ditambahkan')
     return res.redirect('/admin/user')
   }
@@ -101,6 +134,8 @@ export class AdminController {
       req.flash('error', 'User tidak ditemukan')
       return res.redirect('/admin/user')
     }
+    if(req.body.password == '')
+      delete req.body.password
     const reqData = await validateRequest(req, EditUserDto).catch(err => {
       req.flash('error', err.message)
     })
@@ -108,7 +143,12 @@ export class AdminController {
     if(!reqData)
       return res.redirect(`/admin/user/${id}/edit`);
     
-    await this.userService.findAndUpdate(id, {...reqData, profilePicture : req.file? req.file.filename : undefined})
+    try{
+      await this.userService.findAndUpdate(id, {...reqData, profilePicture : req.file? req.file.filename : undefined})
+    }catch(err){
+      req.flash('error', 'Something went wrong')
+      return res.redirect('/admin/user')
+    }
     req.flash('success', 'User berhasil diubah')
     return res.redirect('/admin/user')
   }
@@ -129,7 +169,12 @@ export class AdminController {
     if(!reqData)
       return res.redirect('/admin/produk/add');
 
-    await this.productionTypeService.create(reqData)
+    try{
+      await this.productionTypeService.create(reqData)
+    } catch(err){
+      req.flash('error', "Produk sudah ada")
+      return res.redirect('/admin/produk/add');
+    }
 
     req.flash('success', 'Produk berhasil ditambahkan')
     return res.redirect('/admin/produk')
@@ -176,7 +221,12 @@ export class AdminController {
     if(!reqData)
       return res.redirect(`/admin/produk/${id}/edit`);
 
-    await this.productionTypeService.findAndUpdate(id, reqData)
+    try{
+      await this.productionTypeService.findAndUpdate(id, reqData)
+    } catch(err){
+      req.flash('error', "Something went wrong")
+      return res.redirect(`/admin/produk/${id}/edit`);
+    }
     req.flash('success', 'Produk berhasil diubah')
     return res.redirect('/admin/produk')
   }

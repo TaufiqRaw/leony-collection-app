@@ -1,5 +1,5 @@
-import { ExpressError } from "@/utils/classes/express-error.util";
-import { validateRequest } from "@/utils/validate-request.util";
+import { ExpressError } from "../../utils/classes/express-error.util";
+import { validateRequest } from "../../utils/validate-request.util";
 import { Request, Response } from "express";
 import { UserService } from "../user/user.service";
 import { LoginDto } from "./dto/login.dto";
@@ -28,12 +28,11 @@ export class AuthNController{
       return res.redirect('/auth/login')
     }
 
-    try{
-      await bcrypt.compare(user.password, userEntity.password)
-    }catch(err){
+    if(!(await bcrypt.compare(user.password, userEntity.password))){
       req.flash('error', 'Invalid username or password')
       return res.redirect('/auth/login')
     }
+    
     req.session.user = userEntity
 
     if(userEntity.isAdmin)

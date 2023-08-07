@@ -1,5 +1,5 @@
-import { ExpressError } from "@/utils/classes/express-error.util"
-import { getService } from "@/utils/get-service.util"
+import { ExpressError } from "../../../utils/classes/express-error.util"
+import { getService } from "../../../utils/get-service.util"
 import { ProductionTypeService } from "../production-type.service"
 
 export async function getProductionTypeUtil(id : number){

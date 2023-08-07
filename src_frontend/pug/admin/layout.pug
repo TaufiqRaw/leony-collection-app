@@ -29,7 +29,13 @@ html(lang="en")
             |         Produksi 
         // end sidebar content
       // end sidebar
-      .bg-gray-100.flex-1.p-6
+      .bg-gray-100.flex-1.p-6.revative
+        if error != ""
+          .fixed.top-10.animate-error.opacity-0.z-10.bg-red-500.p-2.rounded-md.text-white.transform.w-max(class="left-1/2 -translate-x-1/2")
+            | #{error}
+        if success != ""
+          .fixed.top-10.z-10.animate-success.opacity-0.bg-green-500.p-2.rounded-md.text-white.transform.w-max(class="left-1/2 -translate-x-1/2")
+            | #{success}
         block content
     script.
       /*Toggle dropdown list*/

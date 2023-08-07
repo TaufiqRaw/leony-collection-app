@@ -1,4 +1,4 @@
-import { getRepository } from "@/utils/get-repository.util";
+import { getRepository } from "../../utils/get-repository.util";
 import { DatabaseService } from "../common/class/database.service";
 import { User, UserProps } from "./user.entity";
 import {hash} from "bcrypt"
@@ -17,9 +17,15 @@ export class UserService extends DatabaseService<User, UserProps> {
     await this.persistAndFlush(user)
   }
 
+  async count(){
+    return await this.userRepository.count()
+  }
+
   async setter(entity: User, setAttr: Partial<UserProps>): Promise<void> {
     if(setAttr.password)
       setAttr.password = await hash(setAttr.password, 12)
+    if(setAttr.password == '')
+      delete setAttr.password
     await super.setter(entity, setAttr)
   }
 

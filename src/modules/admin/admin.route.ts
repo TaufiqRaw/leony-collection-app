@@ -1,8 +1,8 @@
-import { Route } from "@/utils/classes/route.util";
+import { Route } from "../../utils/classes/route.util";
 import multer from "multer";
 import { adminOnlyMiddleware } from "../auth-n/middlewares/admin-only.middleware";
 import { AdminController } from "./admin.controller";
-
+import { ensureAsyncMiddleware } from "../../utils/ensure-async-middleware.util";
 const upload = multer({ dest: 'public/user_img' });
 
 const route = new Route("/admin");
@@ -13,11 +13,12 @@ route.get("/", [AdminController, "dashboard"]);
 
 route.chain("/user")
   .get([AdminController, "user"])
-  .post(upload.single('foto') ,[AdminController, "addUser"])
+  .post(ensureAsyncMiddleware(upload.single('foto')) ,[AdminController, "addUser"])
 route.get("/user/add", [AdminController, "addUserForm"]);
 route.get("/user/:id/edit", [AdminController, "editUserForm"])
 route.chain("/user/:id")
-  .put(upload.single('foto'), [AdminController, "editUser"])
+  .get([AdminController, "showUser"])
+  .put(ensureAsyncMiddleware(upload.single('foto')), [AdminController, "editUser"])
   .delete([AdminController, "deleteUser"]);
 
 route.chain("/produk")

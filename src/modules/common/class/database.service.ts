@@ -1,5 +1,5 @@
-import { CustomBaseEntity } from "@/utils/classes/custom-base.entity";
-import { ExpressError } from "@/utils/classes/express-error.util";
+import { CustomBaseEntity } from "../../../utils/classes/custom-base.entity";
+import { ExpressError } from "../../../utils/classes/express-error.util";
 import { EntityLoaderOptions, FilterQuery, FindOneOptions, FindOptions, QueryFlag, QueryOrder } from "@mikro-orm/core";
 import { EntityRepository } from "@mikro-orm/postgresql";
 

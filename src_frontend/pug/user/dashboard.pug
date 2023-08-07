@@ -34,7 +34,7 @@ block content
         .card.mt-6
           .card-body.flex.items-center
             .px-3.py-2.rounded.bg-indigo-600.text-white.mr-3
-              i.fad.fa-calendar-alt
+              i.fad.fa-calendar
             .flex.flex-col
               h1.font-semibold
                 span.num-2
@@ -45,7 +45,7 @@ block content
         .card.mt-6
           .card-body.flex.items-center
             .px-3.py-2.rounded.bg-indigo-600.text-white.mr-3
-              i.fad.fa-calendar-star
+              i.fad.fa-calendar
             .flex.flex-col
               h1.font-semibold
                 span.num-2
@@ -65,7 +65,7 @@ block content
           hr.w-full.my-2
           .flex.flex-col.gap-2.px-2.w-full
             .h-20(data-simplebar data-simplebar-auto-hide="false")
-              for contribution of contributionsLog
+              for contribution of contributionsLog[0]
                 -format = 'DD/MM/YYYY'
                 div #[span.font-medium #{dateify(contribution.createdAt).format(format)}] - #[span.text-gray-500 #{contribution.amount} Produk Diselesaikan]
         // end body
